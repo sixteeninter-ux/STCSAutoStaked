@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>STCEx → STC Auto Staking (365 วัน)</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <h1>🟡 STCEx → STC Auto Staking (เคลมพร้อมต้นเมื่อครบสัญญา)</h1>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <div>
+        <div class="muted">Wallet</div>
+        <div id="wallet" class="mono">❌ ยังไม่เชื่อมต่อ</div>
+
+        <div class="muted" style="margin-top:6px">
+          Contract: <span id="contract" class="mono">-</span><br/>
+          Explorer:
+          <a id="linkContract" href="#" target="_blank" rel="noreferrer">เปิด Contract</a> |
+          <a id="linkWallet" href="#" target="_blank" rel="noreferrer">เปิด Wallet</a>
+          <br/>
+          <!-- Owner info: จะไม่แสดงให้ user (ซ่อนด้วย JS) แต่ยังมี element ไว้ -->
+          <span id="ownerBox" style="display:none">
+            Owner: <span id="owner" class="mono">-</span> |
+            You are owner: <span id="isOwner" class="mono">-</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="row" style="gap:10px">
+        <button id="btnConnect">เชื่อมต่อกระเป๋า</button>
+        <button id="btnRefresh" disabled>Refresh</button>
+      </div>
+    </div>
+
+    <div id="status" class="status">-</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>1) Stake ด้วย STCEx</h3>
+      <div class="muted">ล็อก 365 วัน รับต้น + ดอก เมื่อครบสัญญา</div>
+      <div class="hr"></div>
+
+      <div class="muted">STCEx amount</div>
+      <input id="inStake" placeholder="เช่น 10" inputmode="decimal" />
+      <div class="row" style="margin-top:10px; gap:10px; flex-wrap:wrap;">
+        <button id="btnApprove" disabled>Approve STCEx</button>
+        <button id="btnStake" disabled>Stake</button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="muted">STCEx Balance: <span id="balSTCEx" class="mono">-</span></div>
+      <div class="muted">STC Balance: <span id="balSTC" class="mono">-</span></div>
+      <div class="muted">Allowance(STCEx → Contract): <span id="allowSTCEx" class="mono">-</span></div>
+
+      <!-- ซ่อนข้อมูล STC ในสัญญาไม่ให้ user เห็น -->
+      <div id="contractBalBox" style="display:none">
+        <div class="hr"></div>
+        <div class="muted">STC in Contract: <span id="cSTC" class="mono">-</span></div>
+        <div class="muted">STCEx in Contract: <span id="cSTCEx" class="mono">-</span></div>
+      </div>
+    </div>
+
+    <!-- paramsCard: ซ่อนจาก user -->
+    <div class="card" id="paramsCard" style="display:none">
+      <h3>พารามิเตอร์ของระบบ</h3>
+      <div class="muted">ดึงค่าจริงจาก Contract</div>
+      <div class="hr"></div>
+      <div class="muted">stcPerStcex: <span id="p1" class="mono">-</span></div>
+      <div class="muted">minStakeSTCEx: <span id="p2" class="mono">-</span></div>
+      <div class="muted">lockSeconds: <span id="p3" class="mono">-</span></div>
+      <div class="muted">periodSeconds: <span id="p4" class="mono">-</span></div>
+      <div class="muted">rewardBps: <span id="p5" class="mono">-</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📌 Positions ของคุณ</h3>
+    <!-- ซ่อนคำอธิบายยาวๆ ใต้หัวข้อ -->
+    <div class="hr"></div>
+
+    <div class="row" style="gap:10px; flex-wrap:wrap;">
+      <span class="badge">positions: <span id="posCount" class="mono">0</span></span>
+      <span class="badge">auto refresh countdown: ทุก 1 วินาที</span>
+    </div>
+
+    <div style="margin-top:10px; overflow:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>posId</th>
+            <th>Principal (STC)</th>
+            <th>Start</th>
+            <th>UnlockAt</th>
+            <th>Countdown</th>
+            <th>Periods</th>
+            <th>Accrued Reward (STC)</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="posTbody">
+          <tr><td colspan="9" class="muted">-</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hr"></div>
+    <div class="muted">
+      หมายเหตุ: ถอน (Withdraw) จะทำได้เมื่อครบสัญญาเท่านั้น และจ่ายเป็น STC (ต้น+ดอก)
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
